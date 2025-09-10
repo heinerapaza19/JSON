@@ -52,22 +52,22 @@ public class CitaController {
     public Cita actualizarParcialCita(@PathVariable Long id, @RequestBody Cita request) {
         return citaService.obtenerCitaPorId(id)
                 .map(citaExistente -> {
-                    if (request.getNombrePaciente() != null) {
-                        citaExistente.setNombrePaciente(request.getNombrePaciente());
-                    }
-                    if (request.getApellidoPaciente() != null) {
-                        citaExistente.setApellidoPaciente(request.getApellidoPaciente());
+                    if (request.getMotivo() != null) {
+                        citaExistente.setMotivo(request.getMotivo());
                     }
                     if (request.getFecha() != null) {
                         citaExistente.setFecha(request.getFecha());
                     }
-                    if (request.getMotivo() != null) {
-                        citaExistente.setMotivo(request.getMotivo());
+                    if (request.getPaciente() != null) {
+                        citaExistente.setPaciente(request.getPaciente());
                     }
                     return citaService.guardarCita(citaExistente);
                 })
                 .orElseThrow(() -> new RuntimeException("Cita no encontrada"));
     }
+
+
+
 
 
     @DeleteMapping("/{id}")
