@@ -1,6 +1,7 @@
 package com.crud.clinica.clinica.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
@@ -28,7 +29,10 @@ public class Paciente {
 
     // 🔹 Relación con Cita
     @OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("paciente") // Evita recursión en citas
     private List<Cita> citas;
+
+
 
 
     // Getters y Setters
