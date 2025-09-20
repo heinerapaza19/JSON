@@ -1,14 +1,12 @@
 package pe.edu.upeu.sisventas.service;
 
-
 import pe.edu.upeu.sisventas.dto.ClienteDTO;
-
 import java.util.List;
 
 public interface ClienteService {
-    ClienteDTO crearCliente(ClienteDTO dto);
-    List<ClienteDTO> listarClientes();
-    ClienteDTO obtenerCliente(Long id);
-    ClienteDTO actualizarCliente(Long id, ClienteDTO dto);
-    void eliminarCliente(Long id);
+    List<ClienteDTO> listar();
+    ClienteDTO buscarPorId(Long id);
+    ClienteDTO guardar(ClienteDTO clienteDTO);
+    ClienteDTO actualizar(Long id, ClienteDTO clienteDTO);
+    void eliminar(Long id);
 }

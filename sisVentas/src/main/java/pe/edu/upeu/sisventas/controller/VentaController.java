@@ -13,6 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/ventas")
 public class VentaController {
+
     @Autowired
     private VentaService ventaService;
 
@@ -23,11 +24,17 @@ public class VentaController {
 
     @PostMapping
     public ResponseEntity<VentaDTO> save(@Valid @RequestBody VentaDTO ventaDTO) {
-        return new ResponseEntity<>(ventaService.guardar(ventaDTO), HttpStatus.OK);
+        return new ResponseEntity<>(ventaService.guardar(ventaDTO), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<VentaDTO> update(@PathVariable Long id, @Valid @RequestBody VentaDTO ventaDTO) {
         return new ResponseEntity<>(ventaService.actualizarVenta(id, ventaDTO), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<VentaDTO> obtenerPorId(@PathVariable Long id) {
+        VentaDTO ventaDTO = ventaService.buscarPorIdDTO(id);
+        return new ResponseEntity<>(ventaDTO, HttpStatus.OK);
     }
 }

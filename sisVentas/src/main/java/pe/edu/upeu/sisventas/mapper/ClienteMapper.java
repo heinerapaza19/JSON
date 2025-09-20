@@ -1,38 +1,21 @@
 package pe.edu.upeu.sisventas.mapper;
 
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 import pe.edu.upeu.sisventas.dto.ClienteDTO;
 import pe.edu.upeu.sisventas.entity.ClienteEntity;
-import pe.edu.upeu.sisventas.entity.VentaEntity;
-import pe.edu.upeu.sisventas.entity.Venta;
+import java.util.stream.Collectors;
+import java.util.ArrayList;
 
+@Mapper(componentModel = "spring", imports = {Collectors.class, ArrayList.class})
+public interface ClienteMapper {
+    ClienteMapper INSTANCE = Mappers.getMapper(ClienteMapper.class);
 
-@Component
-public class ClienteMapper {
+    @Mapping(target = "ventasIds",
+            expression = "java(clienteEntity.getVentas() != null ? clienteEntity.getVentas().stream().map(v -> v.getId()).collect(Collectors.toList()) : new ArrayList<>())")
+    ClienteDTO clienteEntityAClienteDTO(ClienteEntity clienteEntity);
 
-    public ClienteEntity toEntity(ClienteDTO dto, VentaEntity venta) {
-        ClienteEntity cliente = new ClienteEntity();
-        cliente.setNombres(dto.getNombres());
-        cliente.setApellidos(dto.getApellidos());
-        cliente.setDni(dto.getDni());
-        cliente.setVenta(venta);
-        return cliente;
-    }
-
-    public ClienteDTO toDTO(ClienteDTO cliente) {
-        ClienteDTO dto = new ClienteDTO();
-        dto.setNombres(cliente.getNombres());
-        dto.setApellidos(cliente.getApellidos());
-        dto.setDni(cliente.getDni());
-        if(cliente.getVenta() != null) {
-            dto.setVentaId(cliente.getVenta().getId());
-            dto.setFechaVenta(cliente.getVenta().getFecha().toString()); // fecha es LocalDateTime
-            dto.setTotalVenta(cliente.getVenta().getTotal().doubleValue());
-        }
-
-
-
-        return dto;
-    }
-
+    @Mapping(target = "ventas", ignore = true)
+    ClienteEntity clienteDTOAClienteEntity(ClienteDTO clienteDTO);
 }

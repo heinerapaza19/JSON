@@ -1,6 +1,6 @@
 package pe.edu.upeu.sisventas.entity;
 
-
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
@@ -41,14 +41,23 @@ public class VentaEntity implements Serializable {
     @Column(nullable = false, length = 50)
     private String estado = "COMPLETADA"; // COMPLETADA, CANCELADA, PENDIENTE
 
+    // ⚠ Cambiado a String para evitar error
+    private String numeroFactura;
 
-    private Integer numeroFactura;
     private String serie;
+
+    //Relación Many-to-One con Cliente
+    @ManyToOne
+    @JoinColumn(name = "cliente_id", nullable = false)
+    @JsonBackReference
+    private ClienteEntity cliente;
 
     // Relación One-to-Many con VentaDetalle
     @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<VentaDetalleEntity> detalles = new ArrayList<>();
 
+    @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PagoEntity> pagos = new ArrayList<>();
 
     @Column(nullable = false)
     private Date fechaCreacion;
@@ -58,9 +67,9 @@ public class VentaEntity implements Serializable {
     private void beforePersist() {
         this.fechaCreacion = new Date();
         this.fechaModificacion = new Date();
-        this.fecha = LocalDateTime.now();
-      //  this.serie = "F001";
-
+        if (this.fecha == null) {
+            this.fecha = LocalDateTime.now();
+        }
     }
 
     @PreUpdate
@@ -68,7 +77,6 @@ public class VentaEntity implements Serializable {
         this.fechaModificacion = new Date();
     }
 
-    // Métodos de conveniencia para manejar la relación bidireccional
     public void addDetalle(VentaDetalleEntity detalle) {
         detalles.add(detalle);
         detalle.setVenta(this);
@@ -79,7 +87,6 @@ public class VentaEntity implements Serializable {
         detalle.setVenta(null);
     }
 
-    // Constructor que establece fecha actual
     public VentaEntity() {
         this.fecha = LocalDateTime.now();
     }

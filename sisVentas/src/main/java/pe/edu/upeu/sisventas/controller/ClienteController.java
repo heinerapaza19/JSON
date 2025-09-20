@@ -1,5 +1,8 @@
 package pe.edu.upeu.sisventas.controller;
 
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.upeu.sisventas.dto.ClienteDTO;
@@ -11,39 +14,36 @@ import java.util.List;
 @RequestMapping("/clientes")
 public class ClienteController {
 
-    private final ClienteService clienteService;
-
-    public ClienteController(ClienteService clienteService) {
-        this.clienteService = clienteService;
-    }
-
-    @PostMapping
-    public ClienteDTO crearCliente(@RequestBody ClienteDTO dto) {
-        return clienteService.crearCliente(dto);
-    }
+    @Autowired
+    private ClienteService clienteService;
 
     @GetMapping
-    public List<ClienteDTO> listarClientes() {
-        return clienteService.listarClientes();
+    public ResponseEntity<List<ClienteDTO>> listar() {
+        List<ClienteDTO> clientes = clienteService.listar();
+        return new ResponseEntity<>(clientes, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ClienteDTO> obtenerCliente(@PathVariable Long id) {
-        ClienteDTO cliente = clienteService.obtenerCliente(id);
-        if(cliente != null) return ResponseEntity.ok(cliente);
-        else return ResponseEntity.notFound().build();
+    public ResponseEntity<ClienteDTO> buscar(@PathVariable Long id) {
+        ClienteDTO cliente = clienteService.buscarPorId(id);
+        return new ResponseEntity<>(cliente, HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity<ClienteDTO> guardar(@Valid @RequestBody ClienteDTO clienteDTO) {
+        ClienteDTO clienteGuardado = clienteService.guardar(clienteDTO);
+        return new ResponseEntity<>(clienteGuardado, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ClienteDTO> actualizarCliente(@PathVariable Long id, @RequestBody ClienteDTO dto) {
-        ClienteDTO cliente = clienteService.actualizarCliente(id, dto);
-        if(cliente != null) return ResponseEntity.ok(cliente);
-        else return ResponseEntity.notFound().build();
+    public ResponseEntity<ClienteDTO> actualizar(@PathVariable Long id, @Valid @RequestBody ClienteDTO clienteDTO) {
+        ClienteDTO clienteActualizado = clienteService.actualizar(id, clienteDTO);
+        return new ResponseEntity<>(clienteActualizado, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarCliente(@PathVariable Long id) {
-        clienteService.eliminarCliente(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<String> eliminar(@PathVariable Long id) {
+        clienteService.eliminar(id);
+        return new ResponseEntity<>("Cliente eliminado correctamente", HttpStatus.OK);
     }
 }

@@ -1,36 +1,47 @@
 package pe.edu.upeu.sisventas.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import pe.edu.upeu.sisventas.dto.VentaDTO;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+@Data
 @Entity
-public class ClienteEntity {
+@Table(name = "cliente")
+@EqualsAndHashCode(exclude = "ventas")
+@ToString(exclude = "ventas")
+public class ClienteEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull @Size(min = 3, max = 100)
+    @Column(nullable = false, length = 100)
     private String nombres;
+
+    @NotNull @Size(min = 3, max = 100)
+    @Column(nullable = false, length = 100)
     private String apellidos;
+
+    @NotNull @Size(min = 7, max = 15)
+    @Column(nullable = false, unique = true, length = 15)
     private String dni;
 
-    @ManyToOne
-    @JoinColumn(name = "venta_id") // FK hacia Venta
-    private VentaEntity venta; // venta ya existe en entity
 
-    // Getters y Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<VentaEntity> ventas = new ArrayList<>();
 
-    public String getNombres() { return nombres; }
-    public void setNombres(String nombres) { this.nombres = nombres; }
 
-    public String getApellidos() { return apellidos; }
-    public void setApellidos(String apellidos) { this.apellidos = apellidos; }
 
-    public String getDni() { return dni; }
-    public void setDni(String dni) { this.dni = dni; }
 
-    public VentaEntity getVenta() { return venta; }
-    public void setVenta(VentaEntity venta) { this.venta = venta; }
 }
