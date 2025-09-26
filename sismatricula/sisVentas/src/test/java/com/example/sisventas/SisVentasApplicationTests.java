@@ -1,0 +1,13 @@
+package com.example.sisventas;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class SisVentasApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}
