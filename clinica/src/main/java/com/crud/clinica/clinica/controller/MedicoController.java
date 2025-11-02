@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/medicos")
+@CrossOrigin(origins = "*")
 public class MedicoController {
 
     private final MedicoService medicoService;
@@ -37,4 +38,9 @@ public class MedicoController {
         medicoService.eliminar(id);
         return "Médico eliminado correctamente";
     }
+    @PutMapping("/{id}")
+    public Medico actualizar(@PathVariable Long id, @RequestBody Medico medico) {
+        return medicoService.actualizar(id, medico);
+    }
+
 }

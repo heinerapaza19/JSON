@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/pacientes")
+@CrossOrigin(origins = "http://localhost:4200")
 public class PacienteController {
 
 
