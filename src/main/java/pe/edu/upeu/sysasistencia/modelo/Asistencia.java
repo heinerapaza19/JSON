@@ -28,7 +28,8 @@ public class Asistencia {
     private Date horaReg;
     private String latituda;
     private String longituda;
-    @Column(name = "tipo",length = 20,nullable = false)
+
+    @Column(name = "tipo", length = 20, nullable = false)
     private String tipo;
     @Column(name = "calificacion", nullable = false)
     private int calificacion;
@@ -38,8 +39,9 @@ public class Asistencia {
     private String entsal;
     @Column(name = "subactasis_id", nullable = true)
     private Long subactasisId;
-    @Column(name="offlinex",length = 2,nullable = false)
+    @Column(name = "offlinex", length = 2, nullable = false)
     private String offlinex;
+
     @JoinColumn(name = "evento_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Evento eventoId;
